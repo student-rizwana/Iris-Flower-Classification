@@ -1,0 +1,14 @@
+import os
+import zipfile
+
+# Set the Kaggle API key location (if not in the default location)
+os.environ['KAGGLE_CONFIG_DIR'] = '/path/to/.kaggle/'
+
+# Download the dataset
+os.system('kaggle datasets download saurabh00007/iriscsv')
+
+# Extract the dataset
+with zipfile.ZipFile('iriscsv.zip', 'r') as zip_ref:
+    zip_ref.extractall('iris_dataset')
+
+print("Dataset downloaded and extracted to 'iris_dataset' folder.")
