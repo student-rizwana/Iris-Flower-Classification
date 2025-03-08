@@ -1,24 +1,25 @@
+import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 import joblib
 
-# Load the dataset
-df = pd.read_csv('dataset/Iris.csv')
+# Load the trained model
+model = joblib.load('model.pkl')
 
-# Prepare the features (X) and target (y)
-X = df.drop(['Id', 'Species'], axis=1)  # Features
-y = df['Species']  # Target variable
+# Streamlit App
+st.title("🌸 Iris Flower Classification")
+st.write("Predict the species of an Iris flower based on its measurements.")
 
-# Split the dataset
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+# Input fields for features
+sepal_length = st.number_input("Sepal Length (cm)", min_value=4.0, max_value=8.0, step=0.1)
+sepal_width = st.number_input("Sepal Width (cm)", min_value=2.0, max_value=5.0, step=0.1)
+petal_length = st.number_input("Petal Length (cm)", min_value=1.0, max_value=7.0, step=0.1)
+petal_width = st.number_input("Petal Width (cm)", min_value=0.1, max_value=3.0, step=0.1)
 
-# Train a logistic regression model
-model = LogisticRegression(max_iter=200)
-model.fit(X_train, y_train)
+# Prediction
+if st.button("Predict"):
+    features = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+    prediction = model.predict(features)
+    species = {0: "Setosa", 1: "Versicolor", 2: "Virginica"}
+    st.success(f"The predicted species is: **{species[prediction[0]]}**")
 
-# Save the model
-joblib.dump(model, 'model.pkl')
-
-print("✅ Model trained and saved as model.pkl")
